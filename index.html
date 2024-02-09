@@ -8,11 +8,19 @@
 <body>
     <div class="container">
         <h1>Test de Clics Par Seconde (CPS)</h1>
-        <div class="test-area">
-            <button id="cpsTestButton">Cliquez-moi !</button>
-            <div class="results">
-                <p>Nombre de clics: <span id="clickCount">0</span></p>
-                <p>Temps restant: <span id="timeLeft">6</span> secondes</p>
+        <button id="cpsTestButton">Cliquez-moi !</button>
+        <div id="scoreDisplay">
+            <p>Nombre de clics: <span id="clickCount">0</span></p>
+        </div>
+        <div id="timeDisplay">
+            <p>Temps restant: <span id="timeLeft"> 6 </span> Secondes</p>
+        </div>
+        <!-- Modale pour afficher le score -->
+        <div id="scoreModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Votre Score</h2>
+                <p id="scoreText">Nombre total de clics : 0, Moyenne de CPS : 0.00</p>
             </div>
         </div>
     </div>

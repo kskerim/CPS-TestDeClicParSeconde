@@ -1,43 +1,49 @@
 let count = 0;
-let timeLeft = 6; // Durée initiale du test en secondes
+let timeLeft = 6000; // Durée du test en millisecondes (6 secondes)
 let isCounting = false;
 
 const cpsTestButton = document.getElementById('cpsTestButton');
 const clickCountDisplay = document.getElementById('clickCount');
-const timeLeftDisplay = document.getElementById('timeLeft');
-const blocker = document.getElementById('blocker'); // Obtiens la zone de blocage
+const timeLeftDisplay = document.getElementById('timeLeft'); // Élément pour afficher le temps restant
+const scoreModal = document.getElementById('scoreModal');
+const scoreText = document.getElementById('scoreText');
+const closeButton = document.querySelector('.close-button');
 
-function showResults() {
-    const cpsAverage = count / 6;
-    cpsTestButton.innerText = `Test terminé ! Nombre total de clics : ${count}, Moyenne de CPS : ${cpsAverage.toFixed(2)}`;
-    blocker.style.display = 'block'; // Affiche la zone de blocage
-    setTimeout(() => {
-        blocker.style.display = 'none'; // Cache la zone de blocage après un délai
-        cpsTestButton.innerText = 'Cliquez-moi !';
-        clickCountDisplay.innerText = '0';
-        timeLeftDisplay.innerText = '6';
-        isCounting = false;
-    }, 2000); // Donne 2 secondes pour lire les résultats
-}
-
-cpsTestButton.addEventListener('click', () => {
+function handleTest() {
     if (!isCounting) {
         isCounting = true;
         count = 0;
-        timeLeft = 6;
+        timeLeft = 6000; // Réinitialise le temps pour le nouveau test
+        cpsTestButton.innerText = 'Continuez à cliquer!';
         clickCountDisplay.innerText = count;
-        timeLeftDisplay.innerText = timeLeft;
-        const interval = setInterval(() => {
+
+        let interval = setInterval(() => {
             if (timeLeft > 0) {
-                timeLeft--;
-                timeLeftDisplay.innerText = timeLeft;
+                timeLeft -= 100; // Décompte toutes les 100 millisecondes
+                let seconds = Math.floor(timeLeft / 1000); // Calcule les secondes restantes
+                let milliseconds = Math.floor((timeLeft % 1000) / 100); // Calcule les millisecondes restantes
+                timeLeftDisplay.innerText = `${seconds}.${milliseconds} secondes`; // Affiche le temps restant avec les millisecondes
             } else {
                 clearInterval(interval);
-                showResults();
+                cpsTestButton.disabled = true;
+                const cpsAverage = count / 6;
+                scoreText.innerText = `Nombre total de clics : ${count}, Moyenne de CPS : ${cpsAverage.toFixed(2)}`;
+                scoreModal.style.display = "block";
+                isCounting = false;
             }
-        }, 1000);
-    } else if (isCounting) {
+        }, 100); // Met à jour le temps toutes les 100 millisecondes
+    } else {
         count++;
         clickCountDisplay.innerText = count;
     }
-});
+}
+
+cpsTestButton.addEventListener('click', handleTest);
+
+closeButton.onclick = function() {
+    scoreModal.style.display = "none";
+    cpsTestButton.disabled = false;
+    cpsTestButton.innerText = 'Cliquez-moi !';
+    clickCountDisplay.innerText = '0';
+    timeLeftDisplay.innerText = '6.0 secondes'; // Réinitialise l'affichage du temps pour le prochain test
+};
